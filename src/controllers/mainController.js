@@ -17,12 +17,32 @@ const controller = {
 		res.render('index', {
 			visited,
 			inSale,
+			search:'',
 			toThousand
 		});
 	},
 	search: (req, res) => {
+		
+		// 'cai,teste,cafe' => ['cai','teste','cafe'] => ['cai','teste','cafe',search]
+		// => 'cai,teste,cafe,bone'
+		let buscasRealizadas;
+		if(req.cookies.searches == undefined){
+			buscasRealizadas = [];
+		} else {
+			buscasRealizadas = req.cookies.searches.split(',');
+		}
+
 		let search = req.query.keywords;
-		let productsToSearch = products.filter(product => product.name.toLowerCase().includes(search));	
+		
+		buscasRealizadas.push(search);
+
+		// Enviando um cookie para o cliente
+		res.cookie('searches',buscasRealizadas.toString());
+		console.log(buscasRealizadas.toString());
+
+		let productsToSearch = products.filter(product => product.name.toLowerCase().includes(search));
+		
+		
 		res.render('results', { 
 			products: productsToSearch, 
 			search,
