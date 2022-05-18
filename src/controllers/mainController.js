@@ -23,25 +23,26 @@ const controller = {
 	},
 	search: (req, res) => {
 		
-		// 'cai,teste,cafe' => ['cai','teste','cafe'] => ['cai','teste','cafe',search]
-		// => 'cai,teste,cafe,bone'
+		
 		let buscasRealizadas;
-		if(req.cookies.searches == undefined){
+		
+		if(req.session.searches == undefined){
 			buscasRealizadas = [];
 		} else {
-			buscasRealizadas = req.cookies.searches.split(',');
+			buscasRealizadas = req.session.searches.split(',');
 		}
 
 		let search = req.query.keywords;
 		
 		buscasRealizadas.push(search);
 
-		// Enviando um cookie para o cliente
-		res.cookie('searches',buscasRealizadas.toString());
-		console.log(buscasRealizadas.toString());
+		// Salvando informações na session no servidor
+		req.session.searches = buscasRealizadas.toString();
+		//res.cookie('searches', buscasRealizadas.toString());
 
+		console.log(buscasRealizadas.toString());
+		console.log("olá!");
 		let productsToSearch = products.filter(product => product.name.toLowerCase().includes(search));
-		
 		
 		res.render('results', { 
 			products: productsToSearch, 
